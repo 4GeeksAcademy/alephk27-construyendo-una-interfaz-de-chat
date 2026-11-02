@@ -1,4 +1,4 @@
-export const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions'
+export const GROQ_ENDPOINT = '/api/chat'
 
 export const DEFAULT_MODEL = 'qwen/qwen3.8-27b'
 
@@ -54,12 +54,10 @@ function isNumber(value: unknown): value is number {
 }
 
 export async function sendChat({
-  apiKey,
   model,
   messages,
   signal,
 }: {
-  apiKey: string
   model: string
   messages: ChatMessage[]
   signal?: AbortSignal
@@ -71,7 +69,6 @@ export async function sendChat({
     response = await fetch(GROQ_ENDPOINT, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ model, messages }),
@@ -96,11 +93,9 @@ export async function sendChat({
     )
   }
 
-  console.log('[v0] Groq raw response:', response.status, data)
-
   if (!response.ok) {
     const apiMessage =
-      (data as { error?: { message?: unknown } })?.error?.message
+      (data as { error?: unknown })?.error
     const detail = typeof apiMessage === 'string' ? `: ${apiMessage}` : ''
     throw new GroqError(
       `${response.status} ${describeStatus(response.status)}${detail}`,

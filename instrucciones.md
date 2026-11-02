@@ -3,8 +3,8 @@
 ## Cuenta y configuración
 
 - Crea una cuenta gratuita en https://console.groq.com/
-- Genera una API KEY y guárdala en un archivo `.env` (por ejemplo, `NEXT_PUBLIC_GROQ_API_KEY`)
-- Confirma que la clave funciona haciendo una llamada `fetch` de prueba a `https://api.groq.com/openai/v1/chat/completions` con el Bearer token en la cabecera `Authorization`
+- Genera una API KEY y guárdala en `.env.local` como `GROQ_API_KEY` (sin el prefijo `NEXT_PUBLIC_`, para mantenerla solo en el servidor).
+- La aplicación llama a su ruta interna `/api/chat`; el servidor hace `fetch` a `https://api.groq.com/openai/v1/chat/completions` con `Authorization: Bearer <GROQ_API_KEY>` y `Content-Type: application/json`.
 
 ---
 

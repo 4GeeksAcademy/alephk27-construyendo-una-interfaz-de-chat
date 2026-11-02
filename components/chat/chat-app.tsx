@@ -29,9 +29,6 @@ const initialMetrics: Metrics = {
 }
 
 export function ChatApp() {
-  const [apiKey, setApiKey] = useState(
-    process.env.NEXT_PUBLIC_GROQ_API_KEY ?? '',
-  )
   const [model, setModel] = useState(DEFAULT_MODEL)
   const [messages, setMessages] = useState<DisplayMessage[]>([])
   const [metrics, setMetrics] = useState<Metrics>(initialMetrics)
@@ -78,10 +75,6 @@ export function ChatApp() {
     const text = input.trim()
     if (!text || isLoading) return
 
-    if (!apiKey.trim()) {
-      setError('Add your Groq API key above before sending a message.')
-      return
-    }
     if (!model.trim()) {
       setError('Choose a model before sending a message.')
       return
@@ -105,7 +98,6 @@ export function ChatApp() {
 
     try {
       const result = await sendChat({
-        apiKey: apiKey.trim(),
         model: model.trim(),
         messages: payload,
         signal: controller.signal,
@@ -163,14 +155,11 @@ export function ChatApp() {
           Groq Chat
         </h1>
         <p className="text-sm text-muted-foreground">
-          Browser-side calls to the Groq Chat Completions API with live token
-          metrics.
+          Server-proxied Groq Chat Completions with live token metrics.
         </p>
       </header>
 
       <SettingsBar
-        apiKey={apiKey}
-        onApiKeyChange={setApiKey}
         model={model}
         onModelChange={setModel}
         disabled={isLoading}
